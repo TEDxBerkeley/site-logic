@@ -11,7 +11,7 @@ from flask import url_for
 from mongoengine.base import get_document
 import pytest
 import requests
-from template import create_template_app
+from template_logic import create_template_app
 
 
 @pytest.fixture(scope='session')
