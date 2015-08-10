@@ -14,7 +14,7 @@ Here is how to setup a local instance.
 4. Run server `source activate.sh`.
 5. Browse [Logic Core Documentation](http://logic-braiiin.readthedocs.org). (coming soon)
 6. Read the [Guidelines](#guidelines) below.
-7. If you are uncertain of where to start, see [How It Works](#how-it-works) below.
+7. If you are uncertain of where to start, see [How to get Working](#how-to-get-working) below.
 
 > To update your installation of the logic core, use:
  1. `git submodule foreach git reset head --hard` to remove any inadvertent changes.
@@ -70,7 +70,7 @@ In the `template/api.py` file, you must create API classes that extend from
 BaseAPI. Again, this file is arbitrarily named. All that matters, is that an 
 imported views file registers this API using the `register_api` method.
 
-**How to Get Working**
+##How to get Working
 
 If all of the above is confusing, then simply respect the application's
 abstractions and know the following. These should compartmentalize the
