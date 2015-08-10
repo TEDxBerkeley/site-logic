@@ -51,7 +51,8 @@ class SampleAPI(BaseAPI):
 			    'string': Arg(str),
 			    'required': Arg(required=True)
 			}
-		}
+		},
+		'fetch': model.fields_to_args(override={'required': False})
 	}
 	
 	@hook  # optional, checks for & calls pre_[method] and post_[method] functions

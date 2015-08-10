@@ -22,7 +22,7 @@ Here is how to setup a local instance.
 
 ## Guidelines
 
-1. It is safer not to modify the core `logic` submodule, which is located in the 
+1. It is safer not to modify the core `logic` submodule, which is located in the
 `logic` directory from this repository. If you wish to make edits, clone the `logic`
 repository and make edits there.
 2. Make all edits in a new branch. After creating a branch, immediately create 
