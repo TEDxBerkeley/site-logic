@@ -5,6 +5,7 @@ check=`virtualenv --version`
 [ $? != 0 ] && sudo pip3 install virtualenv
 
 # get all submodules
+git submodule init
 git submodule update
 
 # check for virtualenv and datastore
