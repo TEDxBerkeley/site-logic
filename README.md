@@ -1,17 +1,9 @@
-#Template Logic Tier
-
-This is a template logic tier for a sample Braiiin application. All application
-logic tiers should follow the format specified in this template, unless otherwise
-stated.
+#TEDxBerkeley Logic Tier
 
 ## Getting Started
 
 Here is how to setup a local instance.
 
-1. Create a new repository `[app]-logic`, and clone it.
-2. Add this repository as a remote named `template` `git remote add template git@github.com:Braiiin/template-logic.git`
-3. Fetch `git fetch template`.
-4. Merge `git merge template/master`.
 2. Check that needed commands are accessible `source check.sh`.
 3. Install `source install.sh`.
 4. Run server `source activate.sh`.
@@ -43,7 +35,7 @@ name.
 **High-Level Overview**
 
 The logic core is responsible for accepting, authenticating, and translating
-API calls into methods. Each Braiiin logic tier simply treats the core as a
+API calls into methods. Logic tier simply treats the core as a
 distinct, independent library and registers (1) API endpoints for the application
 client to call and (2) models, to define how data is stored.
 
