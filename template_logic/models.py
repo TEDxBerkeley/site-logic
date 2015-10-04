@@ -1,6 +1,12 @@
 from logic.v1.models import Document, db
 
 
+class Conference(Document):
+    """ Conference class - Describes TEDxBerkeley[year] """
+    year = db.IntField(required=True)
+    theme = db.StringField(required=True)
+
+
 class Speaker(Document):
     """  Speaker class -  """
     statuses = ['pending review', 'under review', 'accepted', 'declined']
@@ -9,7 +15,7 @@ class Speaker(Document):
     description = db.StringField(required=True)
     status = db.StringField(default="pending review", required=True, choices=statuses)
     avatar = db.StringField() # path to image
-    conference = db.ReferenceField()
+    conference = db.ReferenceField(Conference)
 
 
 class Nomination(Document):
@@ -20,13 +26,7 @@ class Nomination(Document):
     speaker_pitch = db.StringField(required=True)
 
 
-class Conference(Document):
-    """ Conference class - Describes TEDxBerkeley[year] """
-    year = db.IntField(required=True)
-    theme = db.StringField(required=True)
-
-
-class Engagements(Document):
+class Engagement(Document):
     """ Engagements class - Connects speaker to conference """
     conference = db.ReferenceField(Conference)
     speaker = db.ReferenceField(Speaker)

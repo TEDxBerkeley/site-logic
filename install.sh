@@ -23,8 +23,6 @@ pip3 install -r logic/requirements.txt
 # run mongodb in background
 mongod --dbpath env/db &
 
-python3 setup.py build
-
 mongo 127.0.0.1/admin --eval "db.shutdownServer()"
 mongo 127.0.0.1/admin
 
