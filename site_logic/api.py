@@ -20,7 +20,7 @@ class SpeakerAPI(BaseAPI):
 
     def can(self, obj, user, permission):
         """Returns a boolean allowing or denying API access"""
-        if permission in ['post', 'get', 'put', 'delete']:
+        if permission in ['post', 'get', 'put', 'delete', 'fetch']:
             return True
         return False
 
@@ -41,7 +41,7 @@ class NominationAPI(BaseAPI):
 
     def can(self, obj, user, permission):
         """Returns a boolean allowing or denying API access"""
-        if permission in ['post', 'get', 'put', 'delete']:
+        if permission in ['post', 'get', 'put', 'delete', 'fetch']:
             return True
         return False
 
@@ -62,7 +62,7 @@ class ConferenceAPI(BaseAPI):
 
     def can(self, obj, user, permission):
         """Returns a boolean allowing or denying API access"""
-        if permission in ['post', 'get', 'put', 'delete']:
+        if permission in ['post', 'get', 'put', 'delete', 'fetch']:
             return True
         return False
 
@@ -83,6 +83,6 @@ class EngagementAPI(BaseAPI):
 
     def can(self, obj, user, permission):
         """Returns a boolean allowing or denying API access"""
-        if permission in ['post', 'get', 'put', 'delete']:
+        if permission in ['post', 'get', 'put', 'delete', 'fetch']:
             return True
         return False
