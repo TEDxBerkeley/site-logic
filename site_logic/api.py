@@ -8,14 +8,24 @@ class SpeakerAPI(BaseAPI):
     model = models.Speaker
 
     methods = {
-        'get': model.fields_to_args(override={'required': False}),
-        'post': model.fields_to_args(),
-        'put': model.fields_to_args(),
-        'delete': model.fields_to_args()
+        'get': {
+            'args': model.fields_to_args(override={'required': False})
+        },
+        'post': {
+            'args': model.fields_to_args()
+        },
+        'put': {
+            'args': model.fields_to_args()
+        },
+        'delete': {
+            'args': model.fields_to_args()
+        }
     }
 
     endpoints = {
-        'fetch': model.fields_to_args(override={'required': False})
+        'fetch': {
+            'args': model.fields_to_args(override={'required': False})
+        }
     }
 
     def can(self, obj, user, permission):
@@ -29,14 +39,24 @@ class NominationAPI(BaseAPI):
     model = models.Nomination
 
     methods = {
-        'get': model.fields_to_args(override={'required': False}),
-        'post': model.fields_to_args(),
-        'put': model.fields_to_args(),
-        'delete': model.fields_to_args()
+        'get': {
+            'args': model.fields_to_args(override={'required': False})
+        },
+        'post': {
+            'args': model.fields_to_args()
+        },
+        'put': {
+            'args': model.fields_to_args()
+        },
+        'delete': {
+            'args': model.fields_to_args()
+        }
     }
 
     endpoints = {
-        'fetch': model.fields_to_args(override={'required': False})
+        'fetch': {
+            'args': model.fields_to_args(override={'required': False})
+        }
     }
 
     def can(self, obj, user, permission):
@@ -50,14 +70,24 @@ class ConferenceAPI(BaseAPI):
     model = models.Conference
 
     methods = {
-        'get': model.fields_to_args(override={'required': False}),
-        'post': model.fields_to_args(),
-        'put': model.fields_to_args(),
-        'delete': model.fields_to_args()
+        'get': {
+            'args': model.fields_to_args(override={'required': False})
+        },
+        'post': {
+            'args': model.fields_to_args()
+        },
+        'put': {
+            'args': model.fields_to_args()
+        },
+        'delete': {
+            'args': model.fields_to_args()
+        }
     }
 
     endpoints = {
-        'fetch': model.fields_to_args(override={'required': False})
+        'fetch': {
+            'args': model.fields_to_args(override={'required': False})
+        }
     }
 
     def can(self, obj, user, permission):
@@ -71,14 +101,24 @@ class EngagementAPI(BaseAPI):
     model = models.Engagement
 
     methods = {
-        'get': model.fields_to_args(override={'required': False}),
-        'post': model.fields_to_args(),
-        'put': model.fields_to_args(),
-        'delete': model.fields_to_args()
+        'get': {
+            'args': model.fields_to_args(override={'required': False})
+        },
+        'post': {
+            'args': model.fields_to_args()
+        },
+        'put': {
+            'args': model.fields_to_args()
+        },
+        'delete': {
+            'args': model.fields_to_args()
+        }
     }
 
     endpoints = {
-        'fetch': model.fields_to_args(override={'required': False})
+        'fetch': {
+            'args': model.fields_to_args(override={'required': False})
+        }
     }
 
     def can(self, obj, user, permission):
