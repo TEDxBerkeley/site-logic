@@ -85,10 +85,23 @@ class ConferenceAPI(BaseAPI):
     }
 
     endpoints = {
+        'fetch_speakers': {},
+        'fetch_staff': {},
+        'get_or_create': {
+            'args': model.fields_to_args(override={'required': False})
+        },
         'fetch': {
             'args': model.fields_to_args(override={'required': False})
         }
     }
+
+    def fetch_staff(self, obj, user):
+        """Fetches list of all staff members"""
+
+    def fetch_speakers(self, obj, user):
+        """Fetches list of all speakers"""
+        engagements = models.Engagement(conference=obj).fetch()
+        return [engagement.speaker for engagement in engagements]
 
     def can(self, obj, user, permission):
         """Returns a boolean allowing or denying API access"""
