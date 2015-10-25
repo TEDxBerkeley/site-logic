@@ -18,6 +18,14 @@ class Speaker(Document):
     conference = db.ReferenceField(Conference)
 
 
+class Staff(Document):
+    """ Staff class """
+    name = db.StringField(max_length = 225, required = True)
+    tagline = db.StringField(max_length = 225, required = True)
+    description = db.StringField(required = True)
+    avatar = db.StringField() #path to image
+
+
 class Nomination(Document):
     """ Nomination class - Must be connected to a speaker object """
     speaker = db.ReferenceField(Speaker)
@@ -30,3 +38,9 @@ class Engagement(Document):
     """ Engagements class - Connects speaker to conference """
     conference = db.ReferenceField(Conference)
     speaker = db.ReferenceField(Speaker)
+
+
+class Membership(Document):
+    """ Membership class - Connects staff to conference """
+    staff = db.ReferenceField(Staff)
+    conference = db.ReferenceField(Conference)

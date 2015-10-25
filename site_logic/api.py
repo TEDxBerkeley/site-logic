@@ -126,3 +126,45 @@ class EngagementAPI(BaseAPI):
         if permission in ['post', 'get', 'put', 'delete', 'fetch']:
             return True
         return False
+
+
+class StaffAPI(BaseAPI):
+    model = models.Staff
+
+    methods = {
+        'get': model.fields_to_args(override={'required': False}),
+        'post': model.fields_to_args(),
+        'put': model.fields_to_args(),
+        'delete': model.fields_to_args()
+    }
+
+    endpoints = {
+        'fetch': model.fields_to_args(override={'required': False})
+    }
+
+    def can(self, obj, user, permission):
+        """Returns a boolean allowing or denying API access"""
+        if permission in ['post', 'get', 'put', 'delete', 'fetch']:
+            return True
+        return False
+
+
+class MembershipAPI(BaseAPI):
+    model = models.Membership
+
+    methods = {
+        'get': model.fields_to_args(override={'required': False}),
+        'post': model.fields_to_args(),
+        'put': model.fields_to_args(),
+        'delete': model.fields_to_args()
+    }
+
+    endpoints = {
+        'fetch': model.fields_to_args(override={'required': False})
+    }
+
+    def can(self, obj, user, permission):
+        """Returns a boolean allowing or denying API access"""
+        if permission in ['post', 'get', 'put', 'delete', 'fetch']:
+            return True
+        return False
