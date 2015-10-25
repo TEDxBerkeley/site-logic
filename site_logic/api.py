@@ -169,7 +169,9 @@ class StaffAPI(BaseAPI):
             'args': model.fields_to_args(override={'required': False})
         },
         'post': {
-            'args': model.fields_to_args(),
+            'args': model.fields_to_args(
+                conference=KeyArg(models.Conference)
+            ),
         },
         'put': {
             'args': model.fields_to_args(),
@@ -182,6 +184,21 @@ class StaffAPI(BaseAPI):
     endpoints = {
         'fetch': model.fields_to_args(override={'required': False})
     }
+
+    def pre_post(self, obj, data, _):
+        """Temporarily save conference to obj"""
+        self.conference = data.pop('conference', None).get()
+
+    def post_post(self, obj, data, rval):
+        """Properly links staff to conference"""
+        if self.conference:
+            models.Membership(conference=self.conference,
+                staff=rval.id).post()
+
+    def post_delete(self, obj, data, rval):
+        """Removes all associated Memberships"""
+        for mem in models.Membership(staff=obj.id).fetch():
+            mem.delete()
 
     def can(self, obj, user, permission):
         """Returns a boolean allowing or denying API access"""
