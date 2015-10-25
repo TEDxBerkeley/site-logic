@@ -97,6 +97,8 @@ class ConferenceAPI(BaseAPI):
 
     def fetch_staff(self, obj, user):
         """Fetches list of all staff members"""
+        members = models.Membership(conference=obj).fetch()
+        return [member.staff for member in members]
 
     def fetch_speakers(self, obj, user):
         """Fetches list of all speakers"""
