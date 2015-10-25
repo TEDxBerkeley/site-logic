@@ -15,7 +15,6 @@ class Speaker(Document):
     description = db.StringField(required=True)
     status = db.StringField(default="pending review", required=True, choices=statuses)
     avatar = db.StringField() # path to image
-    conference = db.ReferenceField(Conference)
 
 
 class Staff(Document):

@@ -12,13 +12,14 @@ class SpeakerAPI(BaseAPI):
             'args': model.fields_to_args(override={'required': False})
         },
         'post': {
-            'args': model.fields_to_args()
+            'args': model.fields_to_args(
+                conference=KeyArg(models.Conference))
         },
         'put': {
             'args': model.fields_to_args()
         },
         'delete': {
-            'args': model.fields_to_args()
+            'args': model.fields_to_args(override={'required': False})
         }
     }
 
@@ -27,6 +28,23 @@ class SpeakerAPI(BaseAPI):
             'args': model.fields_to_args(override={'required': False})
         }
     }
+
+    def pre_post(self, obj, data, _):
+        """Temporarily save conference to obj"""
+        self.conference = data.pop('conference', None).get()
+
+    def post_post(self, obj, data, rval):
+        """Properly links speaker to conference"""
+        if self.conference:
+            models.Engagement(conference=self.conference,
+                speaker=rval.id).post()
+
+    def post_delete(self, obj, data, rval):
+        """Removes all associated Engagement objects and Nominations"""
+        for eng in models.Engagement(speaker=obj.id).fetch():
+            eng.delete()
+        for nom in models.Nomination(speaker=obj.id).fetch():
+            nom.delete()
 
     def can(self, obj, user, permission):
         """Returns a boolean allowing or denying API access"""
@@ -49,7 +67,7 @@ class NominationAPI(BaseAPI):
             'args': model.fields_to_args()
         },
         'delete': {
-            'args': model.fields_to_args()
+            'args': model.fields_to_args(override={'required': False})
         }
     }
 
@@ -80,7 +98,7 @@ class ConferenceAPI(BaseAPI):
             'args': model.fields_to_args()
         },
         'delete': {
-            'args': model.fields_to_args()
+            'args': model.fields_to_args(override={'required': False})
         }
     }
 
@@ -126,7 +144,7 @@ class EngagementAPI(BaseAPI):
             'args': model.fields_to_args()
         },
         'delete': {
-            'args': model.fields_to_args()
+            'args': model.fields_to_args(override={'required': False})
         }
     }
 
@@ -147,10 +165,18 @@ class StaffAPI(BaseAPI):
     model = models.Staff
 
     methods = {
-        'get': model.fields_to_args(override={'required': False}),
-        'post': model.fields_to_args(),
-        'put': model.fields_to_args(),
-        'delete': model.fields_to_args()
+        'get': {
+            'args': model.fields_to_args(override={'required': False})
+        },
+        'post': {
+            'args': model.fields_to_args(),
+        },
+        'put': {
+            'args': model.fields_to_args(),
+        },
+        'delete': {
+            'args': model.fields_to_args(override={'required': False})
+        }
     }
 
     endpoints = {
@@ -168,10 +194,18 @@ class MembershipAPI(BaseAPI):
     model = models.Membership
 
     methods = {
-        'get': model.fields_to_args(override={'required': False}),
-        'post': model.fields_to_args(),
-        'put': model.fields_to_args(),
-        'delete': model.fields_to_args()
+        'get': {
+            'args': model.fields_to_args(override={'required': False})
+        },
+        'post': {
+            'args': model.fields_to_args(),
+        },
+        'put': {
+            'args': model.fields_to_args(),
+        },
+        'delete': {
+            'args': model.fields_to_args(override={'required': False})
+        }
     }
 
     endpoints = {
