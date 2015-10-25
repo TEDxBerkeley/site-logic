@@ -96,9 +96,6 @@ class ConferenceAPI(BaseAPI):
         },
         'put': {
             'args': model.fields_to_args()
-        },
-        'delete': {
-            'args': model.fields_to_args(override={'required': False})
         }
     }
 
