@@ -85,6 +85,10 @@ class NominationAPI(BaseAPI):
             name=data.pop('nominee_name', None),
             email=data.pop('nominee_email', None)
         ).get_or_create()
+        models.Engagement(
+            speaker=data['speaker'],
+            conference=models.Conference(year=2015).get() # this should NOT be hardcoded
+        ).get_or_create()
 
     def post_fetch(self, obj, data, rval):
         data = []
