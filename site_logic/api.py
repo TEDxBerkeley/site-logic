@@ -2,6 +2,7 @@ from logic.v1.api import BaseAPI, need, hook
 from logic.v1.args import KeyArg, Arg
 from logic.v1.core.models import User
 from . import models
+import json
 
 
 class SpeakerAPI(BaseAPI):
@@ -12,13 +13,14 @@ class SpeakerAPI(BaseAPI):
             'args': model.fields_to_args(override={'required': False})
         },
         'post': {
-            'args': model.fields_to_args()
+            'args': model.fields_to_args(
+                conference=KeyArg(models.Conference))
         },
         'put': {
-            'args': model.fields_to_args()
+            'args': model.fields_to_args(override={'required': False})
         },
         'delete': {
-            'args': model.fields_to_args()
+            'args': model.fields_to_args(override={'required': False})
         }
     }
 
@@ -27,6 +29,23 @@ class SpeakerAPI(BaseAPI):
             'args': model.fields_to_args(override={'required': False})
         }
     }
+
+    def pre_post(self, obj, data, _):
+        """Temporarily save conference to obj"""
+        self.conference = data.pop('conference', None).get()
+
+    def post_post(self, obj, data, rval):
+        """Properly links speaker to conference"""
+        if self.conference:
+            models.Engagement(conference=self.conference,
+                speaker=rval.id).post()
+
+    def post_delete(self, obj, data, rval):
+        """Removes all associated Engagement objects and Nominations"""
+        for eng in models.Engagement(speaker=obj.id).fetch():
+            eng.delete()
+        for nom in models.Nomination(speaker=obj.id).fetch():
+            nom.delete()
 
     def can(self, obj, user, permission):
         """Returns a boolean allowing or denying API access"""
@@ -43,13 +62,15 @@ class NominationAPI(BaseAPI):
             'args': model.fields_to_args(override={'required': False})
         },
         'post': {
-            'args': model.fields_to_args()
+            'args': model.fields_to_args(
+                nominee_name=Arg(str, required=True),
+                nominee_email=Arg(str, required=True))
         },
         'put': {
             'args': model.fields_to_args()
         },
         'delete': {
-            'args': model.fields_to_args()
+            'args': model.fields_to_args(override={'required': False})
         }
     }
 
@@ -58,6 +79,24 @@ class NominationAPI(BaseAPI):
             'args': model.fields_to_args(override={'required': False})
         }
     }
+
+    def pre_post(self, obj, data, _):
+        data['speaker'] = models.Speaker(
+            name=data.pop('nominee_name', None),
+            email=data.pop('nominee_email', None)
+        ).get_or_create()
+        models.Engagement(
+            speaker=data['speaker'],
+            conference=models.Conference(year=2015).get() # this should NOT be hardcoded
+        ).get_or_create()
+
+    def post_fetch(self, obj, data, rval):
+        data = []
+        for nomination in rval:
+            datum = json.loads(nomination.to_json())
+            datum['speaker'] = json.loads(nomination.speaker.to_json())
+            data.append(datum)
+        return data
 
     def can(self, obj, user, permission):
         """Returns a boolean allowing or denying API access"""
@@ -78,17 +117,29 @@ class ConferenceAPI(BaseAPI):
         },
         'put': {
             'args': model.fields_to_args()
-        },
-        'delete': {
-            'args': model.fields_to_args()
         }
     }
 
     endpoints = {
+        'fetch_speakers': {},
+        'fetch_staff': {},
+        'get_or_create': {
+            'args': model.fields_to_args(override={'required': False})
+        },
         'fetch': {
             'args': model.fields_to_args(override={'required': False})
         }
     }
+
+    def fetch_staff(self, obj, user):
+        """Fetches list of all staff members"""
+        members = models.Membership(conference=obj).fetch()
+        return [member.staff for member in members]
+
+    def fetch_speakers(self, obj, user):
+        """Fetches list of all speakers"""
+        engagements = models.Engagement(conference=obj).fetch()
+        return [engagement.speaker for engagement in engagements]
 
     def can(self, obj, user, permission):
         """Returns a boolean allowing or denying API access"""
@@ -111,7 +162,7 @@ class EngagementAPI(BaseAPI):
             'args': model.fields_to_args()
         },
         'delete': {
-            'args': model.fields_to_args()
+            'args': model.fields_to_args(override={'required': False})
         }
     }
 
@@ -132,15 +183,40 @@ class StaffAPI(BaseAPI):
     model = models.Staff
 
     methods = {
-        'get': model.fields_to_args(override={'required': False}),
-        'post': model.fields_to_args(),
-        'put': model.fields_to_args(),
-        'delete': model.fields_to_args()
+        'get': {
+            'args': model.fields_to_args(override={'required': False})
+        },
+        'post': {
+            'args': model.fields_to_args(
+                conference=KeyArg(models.Conference)
+            ),
+        },
+        'put': {
+            'args': model.fields_to_args(),
+        },
+        'delete': {
+            'args': model.fields_to_args(override={'required': False})
+        }
     }
 
     endpoints = {
         'fetch': model.fields_to_args(override={'required': False})
     }
+
+    def pre_post(self, obj, data, _):
+        """Temporarily save conference to obj"""
+        self.conference = data.pop('conference', None).get()
+
+    def post_post(self, obj, data, rval):
+        """Properly links staff to conference"""
+        if self.conference:
+            models.Membership(conference=self.conference,
+                staff=rval.id).post()
+
+    def post_delete(self, obj, data, rval):
+        """Removes all associated Memberships"""
+        for mem in models.Membership(staff=obj.id).fetch():
+            mem.delete()
 
     def can(self, obj, user, permission):
         """Returns a boolean allowing or denying API access"""
@@ -153,10 +229,18 @@ class MembershipAPI(BaseAPI):
     model = models.Membership
 
     methods = {
-        'get': model.fields_to_args(override={'required': False}),
-        'post': model.fields_to_args(),
-        'put': model.fields_to_args(),
-        'delete': model.fields_to_args()
+        'get': {
+            'args': model.fields_to_args(override={'required': False})
+        },
+        'post': {
+            'args': model.fields_to_args(),
+        },
+        'put': {
+            'args': model.fields_to_args(),
+        },
+        'delete': {
+            'args': model.fields_to_args(override={'required': False})
+        }
     }
 
     endpoints = {

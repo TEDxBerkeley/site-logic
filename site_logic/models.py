@@ -11,11 +11,11 @@ class Speaker(Document):
     """  Speaker class -  """
     statuses = ['pending review', 'under review', 'accepted', 'declined']
     name = db.StringField(max_length=255, required=True)
-    tagline = db.StringField(max_length=255, required=True)
-    description = db.StringField(required=True)
+    email = db.StringField(max_length=255)
+    tagline = db.StringField(max_length=255)
+    description = db.StringField()
     status = db.StringField(default="pending review", required=True, choices=statuses)
     avatar = db.StringField() # path to image
-    conference = db.ReferenceField(Conference)
 
 
 class Staff(Document):
